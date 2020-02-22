@@ -29,10 +29,8 @@ paths:
               type: object
               properties:
                 filename:
-                  type: array
-                  items:
-                    type: string
-                    format: binary
+                  type: string
+                  format: binary
       responses:
         200:
           description: All OK

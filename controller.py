@@ -1,5 +1,5 @@
 import os
-from app import app
+from config import app
 from flask import request, jsonify
 from werkzeug.utils import secure_filename
 
@@ -12,18 +12,21 @@ def allowed_file(filename):
 
 def upload():
     # check if the post request has the file part
-    if 'file' not in request.files:
+    if 'filename' not in request.files:
         resp = jsonify({'message': 'No file part in the request'})
         resp.status_code = 400
         return resp
-    file = request.files['file']
+
+    file = request.files['filename']
+
     if file.filename == '':
         resp = jsonify({'message': 'No file selected for uploading'})
         resp.status_code = 400
         return resp
+
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        file.save(os.path.join(app.app.config['UPLOAD_FOLDER'], filename))
         resp = jsonify({'message': 'File successfully uploaded'})
         resp.status_code = 201
         return resp
