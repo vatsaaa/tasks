@@ -3,7 +3,7 @@ from config import app
 from flask import request, jsonify
 from werkzeug.utils import secure_filename
 
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx', 'xlsx'}
 
 
 def allowed_file(filename):
@@ -26,9 +26,28 @@ def upload():
 
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        file.save(os.path.join(app.app.config['UPLOAD_FOLDER'], filename))
-        resp = jsonify({'message': 'File successfully uploaded'})
+
+        # Only if file was successfully saved, asycn function needs to be run
+        try:
+            file.save(os.path.join(app.app.config['UPLOAD_FOLDER'], filename))
+        except FileNotFoundError as fnf:
+            raise Exception(fnf)
+        except:
+            raise Exception("Unknown exception occurred!")
+        else:
+            async_print.apply_async(
+                args=[{
+                    'message': 'File successfully uploaded',
+                    'filename': filename
+                }],
+                countdown=60)
+
+        resp = jsonify({
+            'message': 'File successfully uploaded',
+            'filename': filename
+        })
         resp.status_code = 201
+
         return resp
     else:
         resp = jsonify({'message': 'Allowed file types are txt, pdf, png, jpg, jpeg, gif'})
