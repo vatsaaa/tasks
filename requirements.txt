@@ -20,6 +20,7 @@ openapi-spec-validator==0.2.8
 pyrsistent==0.15.7
 pytz==2019.3
 PyYAML==5.3
+redis==3.4.1
 requests==2.23.0
 six==1.14.0
 swagger-ui-bundle==0.0.6
