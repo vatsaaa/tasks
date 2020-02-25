@@ -2,6 +2,7 @@ import os
 from config import app
 from flask import request, jsonify
 from werkzeug.utils import secure_filename
+import tasks
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx', 'xlsx'}
 
@@ -35,7 +36,7 @@ def upload():
         except:
             raise Exception("Unknown exception occurred!")
         else:
-            async_print.apply_async(
+            tasks.async_print.apply_async(
                 args=[{
                     'message': 'File successfully uploaded',
                     'filename': filename
