@@ -1,6 +1,7 @@
-from config import app
-
+## Keep the order of imports
+from waitress import serve
+from config.config import app
 
 if __name__ == '__main__':
-    app.run(port=8080, extra_files=["./swagger.yml"])
+    serve(app=app, host='127.0.0.1', port=5454)
 
