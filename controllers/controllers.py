@@ -11,7 +11,7 @@ def allowed_file(filename):
 
 ## Just some code to check connectivity to Redis Cloud Instance
 def db_connect():
-    r = redis.Redis(host='redis-16582.c264.ap-south-1-1.ec2.cloud.redislabs.com', port=16582, password='50m3p@55w0rd')
+    r = redis.Redis(host='redis-16582.c264.ap-south-1-1.ec2.cloud.redislabs.com', port=16582, password='vatsaaa@R3d!5')
     r.set('hello', 'world')
     print(r.get('hello'))
 

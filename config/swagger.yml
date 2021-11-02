@@ -6,8 +6,8 @@ info:
   contact:
     email: ankur.vatsa@gmail.com
   license:
-    name: Copy, change, use - all yours
-    url: http://all/yours
+    name: GNU GPLv3
+    url: https://github.com/vatsaaa/tasks/COPYING
   version: 1.0.0
 externalDocs:
   description: Got to get this fixed
