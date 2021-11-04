@@ -4,7 +4,7 @@ import logging
 import connexion
 
 
-## TODO: enable to set from commandline
+## TODO: enablße to set from commandline
 ALLOW_ALL_FILE_TYPES = True ## True by default
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx', 'xlsx'}
 
@@ -19,6 +19,4 @@ CORS(app.app, origins="*", allow_headers="*")
 
 app.app.config['SECRET_KEY'] = 'top-secret!'
 app.app.config['UPLOAD_FOLDER'] = '/tmp/'
-
-
 

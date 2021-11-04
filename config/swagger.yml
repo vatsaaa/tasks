@@ -10,7 +10,7 @@ info:
     url: https://github.com/vatsaaa/tasks/COPYING
   version: 1.0.0
 externalDocs:
-  description: Got to get this fixed
+  description: README.md
   url: http://fix.please
 servers:
 - url: /api/v1
@@ -27,7 +27,125 @@ paths:
             type: string
           description: suffix is appended to response from the service 
       tags:
-      - Health Check
+      - Health-check
       responses:
         200:
           description: ping( ) services responds to user's ping with pong and the time at which the srvice was invoked. e.g. 
+  /task/{tasktype}/{batchid}:
+    post:
+      tags:
+        - Tasks
+      summary: Create a new task to be stored in task execution queue 'tasktype'
+      operationId: controllers.controllers.create_task
+      parameters:
+        - name: tasktype
+          description: This is the queue where the task will be placed. Tasks in TASQ will never be executed, this is a placeholder queue only.
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - TASKQ
+              - DISPQ
+        - name: batchid
+          description: Passed from the client, to be stored in the queue
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: username
+          description: Client tells
+          in: query
+          required: true
+          schema:
+            type: string
+            example: vatsaaa
+            pattern: ^[a-z]{6,}$
+        - name: taskdelay
+          in: query
+          required: false
+          schema:
+            type: integer
+            example: 5
+            minimum: 0
+            maximum: 300
+            default: 2
+      requestBody:
+        description: Files that are uploaded
+        content:
+          multipart/orm-data:
+            schema:
+              type: object
+              properties:
+                filename:
+                  type: string
+                  format: binary
+      responses:
+        201:
+          description: Successfully created a task which will then be executed
+  /task/{tasktype}/{batchid}/{taskid}:
+    get:
+      tags:
+        - Tasks 
+      summary: Service to get list of tasks
+      operationId: controllers.controllers.list_tasks
+      parameters:
+        - name: tasktype
+          in: path
+          description: Get task from queue 'tasktype'
+          required: true
+          schema:
+            type: string
+            enum:
+              - TASKQ
+              - DISPQ
+        - name: batchid
+          in: path
+          description: Get the task that belongs to batch with this id
+          required: true
+          schema:
+            type: string
+        - name: taskid
+          in: path
+          description: Get the task that has the id that the client specified
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: query
+          description: Tasks are returned only for the given user
+          required: false
+          schema:
+            type: string
+            example: vatsaaa
+            pattern: ^[a-z]{6,}$
+        - name: taskstatus
+          in: query
+          description: Tasks are filtered by status that the client requires. TODO - Support multiple status (or Use GraphQL?)
+          required: false
+          schema:
+            type: string
+            enum:
+              - FAILED
+              - RECEIVED
+              - SUCCEEDED
+      responses:
+        200:
+          description: Returns a list of all tasks that match the specified parameters (this is where GraphQL is more useful)
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/task'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/task'
+
+components:
+  schemas:
+    task:
+      type: object
+      properties:
+        name: 
+          type: string
+          example: vatsaaa
+          pattern: ^[a-z]{6,}$
