@@ -2,8 +2,8 @@ from celery import Celery
 from config.config import app
 
 # Celery-app configuration
-redis_host = '127.0.0.1'
-redis_port = '6379'
+redis_host = 'redis-16582.c264.ap-south-1-1.ec2.cloud.redislabs.com'
+redis_port = '16582'
 
 flower_host = '127.0.0.1'
 flower_port = '5555'
@@ -30,8 +30,8 @@ imports = ['taskqueue']
 
 task_routes = {
     'tasks.taskqueue.enqueue_tasks': {
-        'queue': 'CVFXQ', 
-        'routing_key': 'CVFXQ'
+        'queue': 'DISPQ', 
+        'routing_key': 'DISPQ'
     }
 }
 
