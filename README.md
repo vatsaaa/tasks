@@ -36,9 +36,10 @@
 - Open link http://127.0.0.1:5454/api/v1/ui
 - Operate with Swagger UI 
 
-# How to code
-## Add more functionality
-### Add definition to config/swagger.yml file
+# How to kcontribute
+## Code
+### Add more functionality
+#### Add definition to config/swagger.yml file
 ```yml
 paths:
   /ping:
@@ -78,3 +79,20 @@ curl -X 'GET' \
   'http://127.0.0.1:5454/api/v1/ping?suffix=suffix01' \
   -H 'accept: */*'
 ```
+
+
+### Code reviews and walkthroughs
+
+### Testing
+#### Unit testing
+Need to add unit testing for each module which should run nightly - for every branch
+Successful tests is the first criteria for accepting a merge request
+
+#### Automated testing
+Need to create automated functional tests which should run nightly - for every branch
+Successful tets is the first criteria for accepting a merge request
+
+### Documentation
+#### Improve README.md
+#### Improve wiki
+#### Contribute to discussions
