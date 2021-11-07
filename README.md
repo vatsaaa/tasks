@@ -36,7 +36,8 @@
 - Open link http://127.0.0.1:5454/api/v1/ui
 - Operate with Swagger UI 
 
-# How to kcontribute
+# How to contribute to the project
+Before starting to contribute, one may find it useful to go through this page - [How to contribute to Open Source](https://opensource.guide/how-to-contribute/).
 ## Code
 ### Add more functionality
 #### Add definition to config/swagger.yml file

@@ -86,7 +86,7 @@ def create_task(username: str, tasktype: str, batchid: str, taskdelay: int = 2):
         resp.status_code = 400
         return resp
 
-def list_tasks(tasktype: str, batchid: str, username: str = None, taskid: str = None, taskstatus: str = None):
+def list_tasks(tasktype: str, batchid: str = None, username: str = None, taskid: str = None, taskstatus: str = None):
     resp = tasks.get_flower_tasks(tasktype, batchid, username, taskid, taskstatus)
     return resp
 
