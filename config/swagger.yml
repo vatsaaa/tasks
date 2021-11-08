@@ -66,14 +66,14 @@ paths:
           required: false
           schema:
             type: integer
-            example: 5
+            example: 2
             minimum: 0
             maximum: 300
             default: 2
       requestBody:
         description: Files that are uploaded
         content:
-          multipart/orm-data:
+          multipart/form-data:
             schema:
               type: object
               properties:

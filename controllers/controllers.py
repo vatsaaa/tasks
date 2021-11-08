@@ -25,7 +25,7 @@ def ping(suffix=None):
 
     return resp
 
-def create_task(username: str, tasktype: str, batchid: str, taskdelay: int = 2):
+def create_task(username: str, tasktype: str, batchid: str, taskdelay: int = 2) -> dict:
     # Check if the post request has a file to work with
     if 'filename' not in request.files:
         resp = jsonify({'message': 'No file part in the request'})
@@ -45,11 +45,11 @@ def create_task(username: str, tasktype: str, batchid: str, taskdelay: int = 2):
         # Only if the file was successfully saved, the async function needs to run
         # TODO: File successfully saves to disk, this should be saved to an external location e.g. S3 bucket
         try:
-            file.save(os.path.join(app.app.config['UOLOAD_FOLDER'], filename))
+            file.save(os.path.join(app.app.config['UPLOAD_FOLDER'], filename))
         except FileNotFoundError as fnf:
             raise AppException(fnf)
-        except Exception:
-            raise AppException("Unknown Exception Occurred!!")
+        except Exception as e:
+            raise AppException(e)
         else:
             print("Task requested for {tasktype} for filename {filename}".format(tasktype=tasktype, filename=filename))
             submitted = tasks.enqueue_task.apply_async(
