@@ -27,10 +27,16 @@
 > pip3 install -r requirements.txt
 ```
 
-#### Run the code
+#### Run the app
 ```shell
 > python3 app.py
 ```
+
+#### Run celery
+```shell
+> pip3 install eventlet
+```
+celery -A taskqueue.tasks.celery_app worker --loglevel=DEBUG --pool=eventlet --purge 
 
 #### Test Successful running API
 - Open link http://127.0.0.1:5454/api/v1/ui

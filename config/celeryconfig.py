@@ -10,8 +10,8 @@ flower_port = '5555'
 
 http_scheme = 'http://'
 
-broker_url = 'redis://%s:%s0' % (redis_host, redis_port)
-result_backend =  'redis://%s:%s0' % (redis_host, redis_port)
+broker_url = 'redis://%s:%s/0' % (redis_host, redis_port)
+result_backend =  'redis://%s:%s/0' % (redis_host, redis_port)
 
 task_serializer = 'json'
 result_serializer = 'json'
