@@ -6,7 +6,7 @@ from executor.PrintTask import PrintTask
 from executor.DisplayTask import DisplayTask
 from executor.IgnoreTask import IgnoreTask
 
-from config.celeryconfig import celery_app
+from config.celeryconfig import celery_app, flower_host, flower_port, http_scheme
 from celery.result import AsyncResult
 
 from appexception import AppException
@@ -72,7 +72,7 @@ def get_celery_queue_items(queue_name: str = 'celery'):
 
     if tasks:
         for task in tasks:
-            j = json.loads(taks)
+            j = json.loads(task)
             body = json.loads(base64.b64decode(j['body']))
             decoded_tasks.append(body)
 

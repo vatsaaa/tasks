@@ -52,21 +52,18 @@ def create_task(username: str, tasktype: str, batchid: str, taskdelay: int = 2) 
             raise AppException(e)
         else:
             print("Task requested for {tasktype} for filename {filename}".format(tasktype=tasktype, filename=filename))
-            submitted = tasks.enqueue_task.apply_async(
-                args = [{
+            args = [{
                     'tasktype': tasktype,
                     'batchid': batchid,
                     'user': username,
                     'filepath': app.app.config['UPLOAD_FOLDER'],
                     'filename': filename,
                     'upload date/time': dt.now().strftime("%B %d, %Y %H:%M:%S")
-                    }],
-                countdown = taskdelay,
-                queue = tasktype,
-                track_started = True,
-                task_ignore_result = False
-            )
-
+            }]
+            submitted = tasks.enqueue_task.apply_async(
+                args, countdown = taskdelay, queue = tasktype, 
+                track_started = True, task_ignore_result = False
+                )
         if submitted:
             resp = jsonify({
                 'message': 'Task successfully submitted to {tasktype} for creation'.format(tasktype=tasktype),

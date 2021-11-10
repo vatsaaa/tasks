@@ -105,3 +105,10 @@ Successful tets is the first criteria for accepting a merge request
 #### Improve README.md
 #### Improve wiki
 #### Contribute to discussions
+
+
+#### How to use redis-cli correctlyc
+https://lightrun.com/dev-tools/using-the-redis-command-line/
+
+https://redis.io/topics/data-types-intro
+

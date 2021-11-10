@@ -2,8 +2,9 @@ from celery import Celery
 from config.config import app
 
 # Celery-app configuration
-redis_host = 'redis-16582.c264.ap-south-1-1.ec2.cloud.redislabs.com'
-redis_port = '16582'
+redis_host = '127.0.0.1'
+redis_port = '6379' ## Default port for redis
+redis_db = 0
 
 flower_host = '127.0.0.1'
 flower_port = '5555'
