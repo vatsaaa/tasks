@@ -43,7 +43,9 @@ celery -A taskqueue.tasks.celery_app worker --loglevel=DEBUG --pool=eventlet --p
 - Operate with Swagger UI 
 
 # How to contribute to the project
-Before starting to contribute, one may find it useful to go through this page - [How to contribute to Open Source](https://opensource.guide/how-to-contribute/).
+- Before starting to contribute, one may find it useful to go through this page - [How to contribute to Open Source](https://opensource.guide/how-to-contribute/).
+- The recommended IDE is Visual Studio Code. [Here] is a good tutorial to follow and setup the IDE(https://realpython.com/advanced-visual-studio-code-python/).
+- PyCharm is as good as VS Code, with a few specific differences. Update README.md file with instructions to setup PyCharm - [Issue #8].
 ## Code
 ### Add more functionality
 #### Add definition to config/swagger.yml file
@@ -103,34 +105,3 @@ Successful tets is the first criteria for accepting a merge request
 #### Improve README.md
 #### Improve wiki
 #### Contribute to discussions
-
-
-
-https://github.com/farhanchoudhary/PAN_Card_OCR_Project
-
-https://github.com/konstantint/PassportEye
-
-https://www.opcito.com/blogs/extracting-text-from-images-with-tesseract-ocr-opencv-and-python
-
-https://medium.com/nerd-for-tech/aadhaar-pan-info-extraction-using-python-ocr-5df81b6c66e3
-
-https://stackoverflow.com/questions/54093601/how-to-differentiate-passport-and-pan-card-scanned-images-in-python
-
-https://rajeshshuklacatalyst.in/class-xii-marksheet-management-system/
-
-https://uidai.gov.in/913-common-category/11308-data-and-downloads-section.html
-
-https://cppsecrets.com/users/3081149711010610511611464104111116109971051084699111109/Python-Program-to-Extract-Text-from-Indian-Driving-Licence.php
-
-https://pythonrepo.com/repo/evermeer-PassportScanner-python-computer-vision
-
-https://www.pyimagesearch.com/2015/11/30/detecting-machine-readable-zones-in-passport-images/
-
-https://pythoncircle.com/post/683/scraping-data-of-2019-indian-general-election-using-python-request-and-beautifulsoup-and-analyzing-it/
-
-https://towardsdatascience.com/feature-engineering-for-election-result-prediction-python-943589d89414
-
-https://towardsdatascience.com/resume-screening-with-python-1dea360be49b
-
-https://www.topcoder.com/thrive/articles/make-a-qr-code-with-python
-

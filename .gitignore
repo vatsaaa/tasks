@@ -4,3 +4,4 @@ __pycache__
 config/secrets.ini
 CeleryWorker*
 config.json
+ankur_notes.txt
