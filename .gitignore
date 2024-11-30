@@ -5,3 +5,5 @@ config/secrets.ini
 CeleryWorker*
 config.json
 ankur_notes.txt
+*.bak
+*.rdb
