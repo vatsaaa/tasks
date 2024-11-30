@@ -112,3 +112,8 @@ https://lightrun.com/dev-tools/using-the-redis-command-line/
 
 https://redis.io/topics/data-types-intro
 
+https://www.digitalocean.com/community/cheatsheets/how-to-manage-redis-databases-and-keys
+
+https://github.com/github/copilot-docs/blob/main/docs/visualstudiocode/gettingstarted.md#getting-started-with-github-copilot-in-visual-studio-code
+
+https://www.fast.ai/2021/07/19/copilot/
