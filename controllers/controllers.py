@@ -4,11 +4,11 @@ from werkzeug.utils import secure_filename
 from datetime import datetime as dt
 import redis
 
-from config.config import ALLOW_ALL_FILE_TYPES, app
+from config.config import ALLOW_ALL_FILE_TYPES, app as capp
 from utils.utils import allowed_file
 from appexception import AppException
 from taskqueue import tasks
-
+from taskqueue import celery_app
 
 ## Just some code to check connectivity to Redis Cloud Instance
 def db_connect():
@@ -45,7 +45,7 @@ def create_task(username: str, tasktype: str, batchid: str, taskdelay: int = 2) 
         # Only if the file was successfully saved, the async function needs to run
         # TODO: File successfully saves to disk, this should be saved to an external location e.g. S3 bucket
         try:
-            file.save(os.path.join(app.app.config['UPLOAD_FOLDER'], filename))
+            file.save(os.path.join(capp.app.config['UPLOAD_FOLDER'], filename))
         except FileNotFoundError as fnf:
             raise AppException(fnf)
         except Exception as e:
@@ -55,8 +55,8 @@ def create_task(username: str, tasktype: str, batchid: str, taskdelay: int = 2) 
             args = [{
                     'tasktype': tasktype,
                     'batchid': batchid,
-                    'user': username,
-                    'filepath': app.app.config['UPLOAD_FOLDER'],
+                    'username': username,
+                    'filepath': capp.app.config['UPLOAD_FOLDER'],
                     'filename': filename,
                     'upload date/time': dt.now().strftime("%B %d, %Y %H:%M:%S")
             }]
@@ -66,8 +66,8 @@ def create_task(username: str, tasktype: str, batchid: str, taskdelay: int = 2) 
                 )
         if submitted:
             resp = jsonify({
-                'message': 'Task successfully submitted to {tasktype} for creation'.format(tasktype=tasktype),
-                'filepath': app.app.config['UPLOAD_FOLDER'],
+                'message': 'Task successfully submitted to queue {tasktype} for creation'.format(tasktype=tasktype),
+                'filepath': capp.app.config['UPLOAD_FOLDER'],
                 'filename': filename,
                 'username': username,
                 'batchid': batchid,
@@ -83,15 +83,41 @@ def create_task(username: str, tasktype: str, batchid: str, taskdelay: int = 2) 
         resp.status_code = 400
         return resp
 
-def list_tasks(tasktype: str, batchid: str = None, username: str = None, taskid: str = None, taskstatus: str = None):
-    resp = tasks.get_flower_tasks(tasktype, batchid, username, taskid, taskstatus)
-    return resp
+def list_tasks(username: str, tasktype: str = None, batchid: str = None, taskid: str = None, taskstatus: str = None):
+    if not username:
+        raise AppException("A user can only fetch tasks created by them. Please specify a valid username")
+    
+    i = celery_app.control.inspect()
+    resp = []
+
+    resp.append(i.active())
+    resp.append(i.scheduled())
+    resp.append(i.reserved())
+
+    return jsonify(resp)
 
 def update_task():
     # TODO: Implement soon
     pass
 
-def get_task():
-    # TODO: Implement soon
-    pass
+def get_task(tasktype: str, batchid: str, username: str, taskid: str) -> dict:
+    resp = {}
+    fetched_tasks = list_tasks(tasktype, batchid, username, taskid)
 
+    if len(fetched_tasks) == 0:
+        resp = jsonify({'message': 'No tasks found for {username} in task queue {tasktype}'.format(username=username, tasktype=tasktype)})
+        resp.status_code = 404
+    elif len(fetched_tasks) > 1:
+        resp = jsonify({'message': 'Multiple tasks found for {username} in task queue {tasktype}'.format(username=username, tasktype=tasktype)})
+        resp.status_code = 404
+    else:
+        resp = jsonify({
+            'task': fetched_tasks[0],
+            'tasktype': tasktype,
+            'batchid': batchid,
+            'username': username,
+            'taskid': taskid
+            })
+        resp.status_code = 200
+
+    return resp
