@@ -1,6 +1,6 @@
 from celery import Celery
 from config.config import app
-from config.celeryconfig import broker_url, backend_url, task_routes, task_serializer, result_serializer
+from config.celeryconfig import broker_url, task_routes, task_serializer, result_serializer
 from config.celeryconfig import timezone, accept_content, enable_utc, result_backend
 
 celery_app = Celery(app.app)

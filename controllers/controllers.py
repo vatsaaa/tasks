@@ -8,7 +8,7 @@ from config.config import ALLOW_ALL_FILE_TYPES, app as capp
 from utils.utils import allowed_file
 from appexception import AppException
 from taskqueue import tasks
-from taskqueue import celery_app
+from taskqueue.celery_app_init import celery_app
 
 ## Just some code to check connectivity to Redis Cloud Instance
 def db_connect():

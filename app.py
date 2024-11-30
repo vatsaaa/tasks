@@ -17,11 +17,10 @@ Copyright (C) 2021  <Ankur Vatsa>
 
 ## Keep the order of imports
 import sys
-from waitress import serve
 
 ## Project modules
 from config.config import app
-from utils.project.cli_args import process_args, usage
+from utils.project.cli_args import process_args
 
 
 if __name__ == '__main__':
@@ -31,6 +30,7 @@ if __name__ == '__main__':
     
     ## No app_host because the app runs on localhost
     ## One could do a gethostbyname() to get the hostname, though
+    print('Starting the app with config:', sys.argv[1:])
     config = process_args(sys.argv[1:])
 
-    serve(app=app, host=config["app"]["host"], port=config["app"]["port"])
+    app.run(host=config["app"]["host"], port=config["app"]["port"])

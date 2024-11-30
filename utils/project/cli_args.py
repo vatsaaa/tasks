@@ -8,7 +8,10 @@ from appexception import AppException
 
 
 class SecretsStoreType(enum.Enum):
-    file = "file"
+    file = "file",
+    aws_secrets_manager = "aws_secrets_manager",
+    azure_key_vault = "azure_key_vault",
+    google_secret_manager = "google_secret_manager"
 
 def usage():
     print("Usage: python3 app.py -c <config_file>")
@@ -18,7 +21,13 @@ def get_app_config(secrets_store: str, secrets_store_type: str=SecretsStoreType.
     if secrets_store_type == SecretsStoreType.file:
         with open(secrets_store, "r") as f:
             config = loads(f.read())
-    ## TODO: Add code to read config from other types of secrets store      
+    ## TODO: Add code to read config from other types of secrets store
+    elif secrets_store_type == SecretsStoreType.aws_secrets_manager:
+        pass
+    elif secrets_store_type == SecretsStoreType.azure_key_vault:
+        config = {}
+    elif secrets_store_type == SecretsStoreType.google_secret_manager:
+        config = {}
     else:
         raise AppException("Invalid secrets store type")
 
@@ -47,6 +56,5 @@ def process_args(args) -> dict:
         else:
             usage()
             exit(-2)
-
 
     return config

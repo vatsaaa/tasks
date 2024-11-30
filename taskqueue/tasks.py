@@ -1,5 +1,6 @@
 import sys
 from config.config import app
+from .celery_app_init import celery_app
 
 from celery import Celery
 

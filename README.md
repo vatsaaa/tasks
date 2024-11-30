@@ -28,8 +28,9 @@
 ```
 
 #### Run the app
+The config file should be in ini format.
 ```shell
-> python3 app.py
+> python3 app.py -c config/secrets.ini
 ```
 
 #### Run celery
@@ -39,7 +40,7 @@
 celery -A taskqueue.tasks.celery_app worker --loglevel=DEBUG --pool=eventlet --purge 
 
 #### Test Successful running API
-- Open link http://127.0.0.1:9889/api/v1/ui
+- Open link http://127.0.0.1:7665/api/v1/ui
 - Operate with Swagger UI 
 
 # How to contribute to the project
