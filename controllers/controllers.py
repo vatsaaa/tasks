@@ -2,19 +2,12 @@ import os
 from flask import request, jsonify
 from werkzeug.utils import secure_filename
 from datetime import datetime as dt
-import redis
 
 from config.config import ALLOW_ALL_FILE_TYPES, app as capp
 from utils.utils import allowed_file
 from appexception import AppException
 from taskqueue import tasks
-from taskqueue.celery_app_init import celery_app
-
-## Just some code to check connectivity to Redis Cloud Instance
-def db_connect():
-    r = redis.Redis(host='redis-16582.c264.ap-south-1-1.ec2.cloud.redislabs.com', port=16582, password='vatsaaa@R3d!5')
-    r.set('hello', 'world')
-    print(r.get('hello'))
+from config.celeryconfig import celery_app
 
 def ping(suffix=None):
     resp_str = "User ping, tasks pong / " + dt.now().strftime("%Y-%m-%d, %H:%M:%S")
@@ -84,6 +77,8 @@ def create_task(username: str, tasktype: str, batchid: str, taskdelay: int = 2) 
         return resp
 
 def list_tasks(username: str, tasktype: str = None, batchid: str = None, taskid: str = None, taskstatus: str = None):
+    print("Fetching tasks for {username} in task queue {tasktype}".format(username=username, tasktype=tasktype))
+    
     if not username:
         raise AppException("A user can only fetch tasks created by them. Please specify a valid username")
     
@@ -94,14 +89,36 @@ def list_tasks(username: str, tasktype: str = None, batchid: str = None, taskid:
     resp.append(i.scheduled())
     resp.append(i.reserved())
 
+    print("Active tasks:", resp)
+
     return jsonify(resp)
 
-def update_task():
-    # TODO: Implement soon
-    pass
+def update_task(tasktype: str, batchid: str, username: str, taskid: str) -> dict:
+    resp = {}
+    print("Updating task for {username} in task queue {tasktype}".format(username=username, tasktype=tasktype))
+    fetched_tasks = list_tasks(tasktype, batchid, username, taskid)
+
+    if len(fetched_tasks) == 0:
+        resp = jsonify({'message': 'No tasks found for {username} in task queue {tasktype}'.format(username=username, tasktype=tasktype)})
+        resp.status_code = 404
+    elif len(fetched_tasks) > 1:
+        resp = jsonify({'message': 'Multiple tasks found for {username} in task queue {tasktype}'.format(username=username, tasktype=tasktype)})
+        resp.status_code = 404
+    else:
+        resp = jsonify({
+            'task': fetched_tasks[0],
+            'tasktype': tasktype,
+            'batchid': batchid,
+            'username': username,
+            'taskid': taskid
+            })
+        resp.status_code = 200
+
+    return resp
 
 def get_task(tasktype: str, batchid: str, username: str, taskid: str) -> dict:
     resp = {}
+    print("Fetching task for {username} in task queue {tasktype}".format(username=username, tasktype=tasktype))
     fetched_tasks = list_tasks(tasktype, batchid, username, taskid)
 
     if len(fetched_tasks) == 0:

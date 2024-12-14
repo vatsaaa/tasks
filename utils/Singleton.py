@@ -10,4 +10,3 @@ def singleton(cls):
         return wrapper_singleton.instance
     wrapper_singleton.instance = None
     return wrapper_singleton
-

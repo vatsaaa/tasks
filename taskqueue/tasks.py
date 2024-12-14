@@ -1,8 +1,5 @@
 import sys
-from config.config import app
-from .celery_app_init import celery_app
-
-from celery import Celery
+from config.celeryconfig import celery_app
 
 from executor.PrintTask import PrintTask
 from executor.DisplayTask import DisplayTask
@@ -26,11 +23,9 @@ def enqueue_task(data: dict):
     task.run()
     task.persist(todb=True)
 
-
 def get_celery_queue_len(queue_name: str = 'celery'):
     with celery_app.pool.acquire(block=True) as connection:
         return connection.default_channel.client.llen(queue_name)
-
 
 def get_celery_queue_items(queue_name: str = 'celery'):
     import base64
@@ -48,7 +43,6 @@ def get_celery_queue_items(queue_name: str = 'celery'):
             decoded_tasks.append(body)
 
     return decoded_tasks
-
 
 def get_task_state(taskid: str):
     taskstatus = {'taskid': taskid}

@@ -108,13 +108,17 @@ Successful tets is the first criteria for accepting a merge request
 #### Contribute to discussions
 
 
-#### How to use redis-cli correctlyc
+#### How to use redis-cli correctly
 https://lightrun.com/dev-tools/using-the-redis-command-line/
 
 https://redis.io/topics/data-types-intro
 
 https://www.digitalocean.com/community/cheatsheets/how-to-manage-redis-databases-and-keys
 
-https://github.com/github/copilot-docs/blob/main/docs/visualstudiocode/gettingstarted.md#getting-started-with-github-copilot-in-visual-studio-code
+- [Dated article on 'Is GitHub Co-pilot good?'](https://www.fast.ai/2021/07/19/copilot/)
+- [Function pointers in Python](https://seniorbrogrammer.medium.com/cleaner-code-using-function-pointers-in-python-75c49f04b6f2)
 
-https://www.fast.ai/2021/07/19/copilot/
+
+When a task is enqueued in Celery with 'apply_async' then the Celery serializes the task and sends the task metadata and arguments as a message in a specific redis-queue.
+
+Celery workers continuously polls for messages from the Redis queue continuously for new tasks and when it gets the new tasks it pulls and deserializes that message and get the task metadata and arguments after that it executes that task.

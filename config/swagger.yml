@@ -39,7 +39,7 @@ paths:
       operationId: controllers.controllers.create_task
       parameters:
         - name: tasktype
-          description: This is the queue where the task will be placed. Tasks in TASQ will never be executed, this is a placeholder queue only.
+          description: This is the queue where the task will be placed. Tasks in TASKQ will never be executed, this is a placeholder queue only.
           in: path
           required: true
           schema:
