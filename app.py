@@ -20,8 +20,7 @@ import sys
 
 ## Project modules
 from config.config import app
-from utils.project.cli_args import process_args
-
+from utils.project.cli_args import process_args, usage
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:

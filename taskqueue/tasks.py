@@ -1,14 +1,10 @@
 import sys
 from config.celeryconfig import celery_app
-
 from executor.PrintTask import PrintTask
 from executor.DisplayTask import DisplayTask
 from executor.IgnoreTask import IgnoreTask
-
 from celery.result import AsyncResult
-
 from appexception import AppException
-
 
 # These are task functions that get executed async from the controller module
 @celery_app.task(acks_late=True)

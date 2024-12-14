@@ -6,7 +6,6 @@ import enum
 ## Project imports
 from appexception import AppException
 
-
 class SecretsStoreType(enum.Enum):
     file = "file",
     aws_secrets_manager = "aws_secrets_manager",
