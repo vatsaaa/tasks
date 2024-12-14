@@ -1,4 +1,4 @@
-import os
+import base64, json, os
 from flask import request, jsonify
 from werkzeug.utils import secure_filename
 from datetime import datetime as dt
@@ -76,49 +76,28 @@ def create_task(username: str, tasktype: str, batchid: str, taskdelay: int = 2) 
         resp.status_code = 400
         return resp
 
-def list_tasks(username: str, tasktype: str = None, batchid: str = None, taskid: str = None, taskstatus: str = None):
-    print("Fetching tasks for {username} in task queue {tasktype}".format(username=username, tasktype=tasktype))
-    
+def list_tasks(username: str, tasktype: str, batchid: str = None, taskid: str = None, taskstatus: str = None):
     if not username:
         raise AppException("A user can only fetch tasks created by them. Please specify a valid username")
+
+    if not tasktype:
+        raise AppException("Please specify the task queue to fetch tasks from!")
     
-    i = celery_app.control.inspect()
-    resp = []
+    tasks = []
+    with celery_app.pool.acquire(block=True) as conn:
+        tasks = conn.default_channel.client.lrange(tasktype, 0, -1)
+    
+    decoded_tasks = []
+    for task in tasks:
+        j = json.loads(task)
+        body = json.loads(base64.b64decode(j['body']))
+        decoded_tasks.append(body)
+    
+    return jsonify(decoded_tasks)
 
-    resp.append(i.active())
-    resp.append(i.scheduled())
-    resp.append(i.reserved())
-
-    print("Active tasks:", resp)
-
-    return jsonify(resp)
-
-def update_task(tasktype: str, batchid: str, username: str, taskid: str) -> dict:
+def update_tasks(username: str, tasktype: str, batchid: str, taskid: str=None) -> dict:
     resp = {}
     print("Updating task for {username} in task queue {tasktype}".format(username=username, tasktype=tasktype))
-    fetched_tasks = list_tasks(tasktype, batchid, username, taskid)
-
-    if len(fetched_tasks) == 0:
-        resp = jsonify({'message': 'No tasks found for {username} in task queue {tasktype}'.format(username=username, tasktype=tasktype)})
-        resp.status_code = 404
-    elif len(fetched_tasks) > 1:
-        resp = jsonify({'message': 'Multiple tasks found for {username} in task queue {tasktype}'.format(username=username, tasktype=tasktype)})
-        resp.status_code = 404
-    else:
-        resp = jsonify({
-            'task': fetched_tasks[0],
-            'tasktype': tasktype,
-            'batchid': batchid,
-            'username': username,
-            'taskid': taskid
-            })
-        resp.status_code = 200
-
-    return resp
-
-def get_task(tasktype: str, batchid: str, username: str, taskid: str) -> dict:
-    resp = {}
-    print("Fetching task for {username} in task queue {tasktype}".format(username=username, tasktype=tasktype))
     fetched_tasks = list_tasks(tasktype, batchid, username, taskid)
 
     if len(fetched_tasks) == 0:
