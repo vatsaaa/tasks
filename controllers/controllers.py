@@ -76,7 +76,7 @@ def create_task(username: str, tasktype: str, batchid: str, taskdelay: int = 2) 
         resp.status_code = 400
         return resp
 
-def list_tasks(username: str, tasktype: str, batchid: str = None, taskid: str = None, taskstatus: str = None):
+def list_tasks(username: str, tasktype: str, batchid: str=None, taskid: str=None):
     if not username:
         raise AppException("A user can only fetch tasks created by them. Please specify a valid username")
 
@@ -89,9 +89,14 @@ def list_tasks(username: str, tasktype: str, batchid: str = None, taskid: str = 
     
     decoded_tasks = []
     for task in tasks:
-        j = json.loads(task)
+        j = json.loads(task.decode('utf-8'))
         body = json.loads(base64.b64decode(j['body']))
-        decoded_tasks.append(body)
+        header_taskid = j['headers']['id']
+        body[0][0]['taskid'] = header_taskid
+        
+        if body[0][0]['batchid'] == batchid or batchid is None:
+            if body[0][0]['taskid'] == taskid or taskid is None:
+                decoded_tasks.append(body)
     
     return jsonify(decoded_tasks)
 

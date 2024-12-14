@@ -114,7 +114,7 @@ paths:
         - name: username
           in: query
           description: Tasks are returned only for the given user
-          required: false
+          required: true
           schema:
             type: string
             example: vatsaaa
