@@ -139,6 +139,55 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/task'
+    put:
+      tags:
+        - Tasks 
+      summary: Service to update some tasks
+      operationId: controllers.controllers.update_tasks
+      parameters:
+        - name: username
+          description: Client tells
+          in: query
+          required: true
+          schema:
+            type: string
+            example: vatsaaa
+            pattern: ^[a-z]{6,}$
+        - name: tasktype
+          in: path
+          description: Get task from queue 'tasktype'
+          required: true
+          schema:
+            type: string
+            enum:
+              - TASKQ
+              - DISPQ
+        - name: batchid
+          in: path
+          description: Get the task that belongs to batch with this id
+          required: true
+          schema:
+            type: string
+        - name: taskstatus
+          in: query
+          description: Tasks are filtered by status that the client requires. TODO - Support multiple status (or Use GraphQL?)
+          required: false
+          schema:
+            type: string
+            enum:
+              - FAILED
+              - RECEIVED
+              - SUCCEEDED
+      responses:
+        200:
+          description: Returns a list of all tasks that match the specified parameters (this is where GraphQL is more useful)
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/task'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/task'
 
 components:
   schemas:

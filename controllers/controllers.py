@@ -77,8 +77,10 @@ def create_task(username: str, tasktype: str, batchid: str, taskdelay: int = 2) 
         return resp
 
 def list_tasks(username: str, tasktype: str, batchid: str=None, taskid: str=None):
+    print("Listing tasks for {username} in task queue {tasktype} for {batchid} and {taskid}".format(username=username, tasktype=tasktype, batchid=batchid, taskid=taskid))
+    
     if not username:
-        raise AppException("A user can only fetch tasks created by them. Please specify a valid username")
+        raise AppException("A user can only fetch their own tasks. Please specify a valid username")
 
     if not tasktype:
         raise AppException("Please specify the task queue to fetch tasks from!")
@@ -103,15 +105,19 @@ def list_tasks(username: str, tasktype: str, batchid: str=None, taskid: str=None
 def update_tasks(username: str, tasktype: str, batchid: str, taskid: str=None) -> dict:
     resp = {}
     print("Updating task for {username} in task queue {tasktype}".format(username=username, tasktype=tasktype))
-    fetched_tasks = list_tasks(tasktype, batchid, username, taskid)
+    fetched_tasks = list_tasks(username=username, tasktype=tasktype, batchid=batchid, taskid=taskid)
 
-    if len(fetched_tasks) == 0:
+    fetched_tasks_json = fetched_tasks.get_json()
+
+    ## TODO: Fix the code from here, before this all is fine
+    if len(fetched_tasks_json) == 0:
         resp = jsonify({'message': 'No tasks found for {username} in task queue {tasktype}'.format(username=username, tasktype=tasktype)})
         resp.status_code = 404
-    elif len(fetched_tasks) > 1:
+    elif len(fetched_tasks_json) > 1:
         resp = jsonify({'message': 'Multiple tasks found for {username} in task queue {tasktype}'.format(username=username, tasktype=tasktype)})
         resp.status_code = 404
     else:
+        ## TODO: Add code to update tasks in celery redis queue
         resp = jsonify({
             'task': fetched_tasks[0],
             'tasktype': tasktype,
