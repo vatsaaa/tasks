@@ -102,6 +102,7 @@ def list_tasks(username: str, tasktype: str, batchid: str=None, taskid: str=None
     
     return jsonify(decoded_tasks)
 
+## TODO: Do we need this method? Or should we just create cancel_tasks( ) method?
 def update_tasks(username: str, tasktype: str, batchid: str, taskid: str=None) -> dict:
     resp = {}
     print("Updating task for {username} in task queue {tasktype}".format(username=username, tasktype=tasktype))
@@ -128,3 +129,13 @@ def update_tasks(username: str, tasktype: str, batchid: str, taskid: str=None) -
         resp.status_code = 200
 
     return resp
+
+def cancel_tasks(username: str, tasktype: str, batch_id: str, task_id: str=None):
+    print("Cancelling task for {username} in task queue {tasktype}".format(username=username, tasktype=tasktype))
+    fetched_tasks = list_tasks(username=username, tasktype=tasktype, batchid=batch_id, taskid=task_id)
+
+    ## TODO: Add code for canceling tasks in celery redis queue
+
+    ## Return the remaining tasks in the queue
+    remaining_tasks = list_tasks(username=username, tasktype=tasktype, batchid=batch_id, taskid=task_id)
+    return jsonify(remaining_tasks)

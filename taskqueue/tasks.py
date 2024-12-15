@@ -7,7 +7,7 @@ from celery.result import AsyncResult
 from appexception import AppException
 
 # These are task functions that get executed async from the controller module
-@celery_app.task(acks_late=True)
+@celery_app.task(acks_late=True, default_retry_delay=1 * 60)
 def enqueue_task(data: dict):
     if data['tasktype'] == 'TASKQ':
         task = PrintTask(data)
@@ -17,6 +17,7 @@ def enqueue_task(data: dict):
         task = IgnoreTask(data)
 
     task.run()
+
     task.persist(todb=True)
 
 def get_celery_queue_len(queue_name: str = 'celery'):
